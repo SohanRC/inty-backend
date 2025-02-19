@@ -15,7 +15,7 @@ connectDB();
 // Middleware
 app.use(cors({
     origin: [
-      'http://localhost:3000',  // Local development
+      'http://localhost:5173',  // Local development
       'https://inty-2qxy.vercel.app',  // Your specific Vercel deployment
       // Add any other domains you're using
     ],
