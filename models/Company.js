@@ -1,4 +1,3 @@
-// models/Company.js
 const mongoose = require('mongoose');
 
 const companySchema = new mongoose.Schema({
@@ -6,6 +5,10 @@ const companySchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true
+  },
+  logo: {
+    type: String,
+    required: true
   },
   reviews: {
     type: Number,
@@ -30,5 +33,4 @@ const companySchema = new mongoose.Schema({
 });
 
 companySchema.index({ name: 'text' });
-
 module.exports = mongoose.model('Company', companySchema);
