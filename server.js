@@ -13,7 +13,15 @@ const app = express();
 connectDB();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+    origin: [
+      'http://localhost:3000',  // Local development
+      'https://inty-2qxy.vercel.app',  // Your specific Vercel deployment
+      // Add any other domains you're using
+    ],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+  }));
 app.use(express.json());
 
 // Debug middleware
