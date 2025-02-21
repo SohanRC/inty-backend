@@ -16,7 +16,7 @@ connectDB();
 app.use(cors({
     origin: [
       'http://localhost:5173',  // Local development
-      'https://inty-2qxy.vercel.app',  // Your specific Vercel deployment
+      'https://inty-frontend.vercel.app/',  // Your specific Vercel deployment
       // Add any other domains you're using
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
