@@ -1,3 +1,4 @@
+// routes/companyRoutes.js
 const express = require('express');
 const router = express.Router();
 const companyController = require('../controllers/companyController');
@@ -10,10 +11,10 @@ router.get('/test', (req, res) => {
 // Get all companies with pagination
 router.get('/', companyController.getCompanies);
 
-// Create a new company
+// Create a new company - no upload middleware here as it's handled in controller
 router.post('/', companyController.createCompany);
 
-// Update a company
+// Update a company - no upload middleware here as it's handled in controller
 router.put('/:id', companyController.updateCompany);
 
 // Delete a company
