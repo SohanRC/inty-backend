@@ -43,9 +43,26 @@ const getCompanies = async (req, res) => {
     });
   } catch (error) {
     console.error('Error in getCompanies:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       message: 'Error fetching companies',
-      error: error.message 
+      error: error.message
+    });
+  }
+};
+
+const getCompanyById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const company = await Company.findById(id)
+    return res.status(201).json({
+      ok: true,
+      companyDetails: company
+    })
+  } catch (error) {
+    console.error('Error in getCompanies:', error);
+    res.status(500).json({
+      message: 'Error fetching companies',
+      error: error.message
     });
   }
 };
@@ -59,7 +76,7 @@ const createCompany = async (req, res) => {
     // First check for multer/upload errors
     if (err) {
       console.error('Upload error:', err);
-      return res.status(400).json({ 
+      return res.status(400).json({
         message: err.message || 'Error uploading files',
         error: err.toString()
       });
@@ -69,7 +86,7 @@ const createCompany = async (req, res) => {
       // Log the request body and files for debugging
       console.log('Request body:', req.body);
       console.log('Files received:', req.files ? Object.keys(req.files) : 'No files');
-      
+
       // Create a company data object from the form fields
       const companyData = {
         // Original required fields
@@ -77,14 +94,14 @@ const createCompany = async (req, res) => {
         projects: parseInt(req.body.projects) || 0,
         experience: parseInt(req.body.experience) || 0,
         branches: parseInt(req.body.branches) || 0,
-        
+
         // New fields from form
         registeredCompanyName: req.body.registeredCompanyName || '',
         nameDisplay: req.body.nameDisplay || '',
         description: req.body.description || '',
         ageOfCompany: req.body.ageOfCompany || '',
-        availableCities: Array.isArray(req.body.availableCities) 
-          ? req.body.availableCities 
+        availableCities: Array.isArray(req.body.availableCities)
+          ? req.body.availableCities
           : (req.body.availableCities ? [req.body.availableCities] : []),
         officialWebsite: req.body.officialWebsite || '',
         fullName: req.body.fullName || '',
@@ -103,41 +120,41 @@ const createCompany = async (req, res) => {
         paymentType: req.body.paymentType || '',
         assured: req.body.assured || '',
       };
-      
+
       // Add file URLs from Cloudinary if they exist
       if (req.files) {
         // Add logo if uploaded
         if (req.files.logo && req.files.logo[0]) {
           companyData.logo = req.files.logo[0].path;
         }
-        
+
         // Add banner images if uploaded
         for (let i = 0; i < 10; i++) {
           const fieldName = `bannerImage${i}`;
           if (req.files[fieldName] && req.files[fieldName][0]) {
-            companyData[`bannerImage${i+1}`] = req.files[fieldName][0].path;
+            companyData[`bannerImage${i + 1}`] = req.files[fieldName][0].path;
           }
         }
-        
+
         // Add PDF documents if uploaded
         if (req.files.digitalBrochure && req.files.digitalBrochure[0]) {
           companyData.digitalBrochure = req.files.digitalBrochure[0].path;
         }
-        
+
         if (req.files.testimonialsAttachment && req.files.testimonialsAttachment[0]) {
           companyData.testimonialsAttachment = req.files.testimonialsAttachment[0].path;
         }
       }
-      
+
       // Create and save the company
       const company = new Company(companyData);
       const savedCompany = await company.save();
-      
+
       res.status(201).json(savedCompany);
     } catch (error) {
       console.error('Error creating company:', error);
       // Enhanced error response
-      return res.status(400).json({ 
+      return res.status(400).json({
         message: error.message,
         error: error.toString(),
         stack: error.stack,
@@ -155,7 +172,7 @@ const updateCompany = async (req, res) => {
   handleUpload(req, res, async (err) => {
     if (err) {
       console.error('Upload error during update:', err);
-      return res.status(400).json({ 
+      return res.status(400).json({
         message: err.message || 'Error uploading files',
         error: err.toString()
       });
@@ -167,22 +184,22 @@ const updateCompany = async (req, res) => {
       if (!existingCompany) {
         return res.status(404).json({ message: 'Company not found' });
       }
-      
+
       // Create update object from request body
       const updates = { ...req.body };
-      
+
       // Handle numeric fields
       if (updates.projects) updates.projects = parseInt(updates.projects);
       if (updates.experience) updates.experience = parseInt(updates.experience);
       if (updates.branches) updates.branches = parseInt(updates.branches);
-      
+
       // Handle array fields
       if (updates.availableCities) {
-        updates.availableCities = Array.isArray(updates.availableCities) 
-          ? updates.availableCities 
+        updates.availableCities = Array.isArray(updates.availableCities)
+          ? updates.availableCities
           : [updates.availableCities];
       }
-      
+
       // Process file uploads and update URLs
       if (req.files) {
         // Update logo if uploaded
@@ -193,12 +210,12 @@ const updateCompany = async (req, res) => {
           }
           updates.logo = req.files.logo[0].path;
         }
-        
+
         // Update banner images if uploaded
         for (let i = 0; i < 10; i++) {
           const fieldName = `bannerImage${i}`;
-          const dbFieldName = `bannerImage${i+1}`;
-          
+          const dbFieldName = `bannerImage${i + 1}`;
+
           if (req.files[fieldName] && req.files[fieldName][0]) {
             // Delete old banner from Cloudinary
             if (existingCompany[dbFieldName]) {
@@ -207,7 +224,7 @@ const updateCompany = async (req, res) => {
             updates[dbFieldName] = req.files[fieldName][0].path;
           }
         }
-        
+
         // Update PDF documents if uploaded
         if (req.files.digitalBrochure && req.files.digitalBrochure[0]) {
           // Delete old brochure from Cloudinary
@@ -216,7 +233,7 @@ const updateCompany = async (req, res) => {
           }
           updates.digitalBrochure = req.files.digitalBrochure[0].path;
         }
-        
+
         if (req.files.testimonialsAttachment && req.files.testimonialsAttachment[0]) {
           // Delete old testimonials from Cloudinary
           if (existingCompany.testimonialsAttachment) {
@@ -236,7 +253,7 @@ const updateCompany = async (req, res) => {
       res.json(company);
     } catch (error) {
       console.error('Error updating company:', error);
-      res.status(400).json({ 
+      res.status(400).json({
         message: error.message,
         error: error.toString(),
         validation: error.errors ? Object.keys(error.errors).map(key => ({
@@ -252,19 +269,19 @@ const updateCompany = async (req, res) => {
 const deleteCompany = async (req, res) => {
   try {
     const company = await Company.findById(req.params.id);
-    
+
     if (!company) {
       return res.status(404).json({ message: 'Company not found' });
     }
 
     // Delete all files associated with this company from Cloudinary
     const fileFields = [
-      'logo', 
+      'logo',
       'bannerImage1', 'bannerImage2', 'bannerImage3', 'bannerImage4', 'bannerImage5',
       'bannerImage6', 'bannerImage7', 'bannerImage8', 'bannerImage9', 'bannerImage10',
       'digitalBrochure', 'testimonialsAttachment'
     ];
-    
+
     // Delete files in parallel using Promise.all
     await Promise.all(
       fileFields
@@ -286,5 +303,6 @@ module.exports = {
   getCompanies,
   createCompany,
   updateCompany,
-  deleteCompany
+  deleteCompany,
+  getCompanyById
 };

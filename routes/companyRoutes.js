@@ -11,6 +11,9 @@ router.get('/test', (req, res) => {
 // Get all companies with pagination
 router.get('/', companyController.getCompanies);
 
+// Get Company with a particular Id
+router.get('/getCompany/:id', companyController.getCompanyById);
+
 // Create a new company - no upload middleware here as it's handled in controller
 router.post('/', companyController.createCompany);
 

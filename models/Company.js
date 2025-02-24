@@ -27,7 +27,7 @@ const companySchema = new mongoose.Schema({
     type: Number,
     required: true
   },
-  
+
   // New fields from screenshots
   registeredCompanyName: {
     type: String,
@@ -136,7 +136,7 @@ const companySchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now
-  }
+  },
 });
 
 companySchema.index({ name: 'text', registeredCompanyName: 'text', description: 'text' });
