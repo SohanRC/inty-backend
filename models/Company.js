@@ -118,9 +118,6 @@ const companySchema = new mongoose.Schema({
   googleReviews: {
     type: String
   },
-  googleLocation: {
-    type: String
-  },
   anyAwardWon: {
     type: String
   },
@@ -137,6 +134,12 @@ const companySchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
+  latitude: {
+    type: String,
+  },
+  longitude: {
+    type: String,
+  }
 });
 
 companySchema.index({ name: 'text', registeredCompanyName: 'text', description: 'text' });

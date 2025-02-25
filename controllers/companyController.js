@@ -84,7 +84,7 @@ const createCompany = async (req, res) => {
 
     try {
       // Log the request body and files for debugging
-      console.log('Request body:', req.body);
+      console.log('Company body:', req.body);
       console.log('Files received:', req.files ? Object.keys(req.files) : 'No files');
 
       // Create a company data object from the form fields
@@ -114,11 +114,12 @@ const createCompany = async (req, res) => {
         contactEmail: req.body.contactEmail || '',
         googleRating: req.body.googleRating || '',
         googleReviews: req.body.googleReviews || '',
-        googleLocation: req.body.googleLocation || '',
         anyAwardWon: req.body.anyAwardWon || '',
         categoryType: req.body.categoryType || '',
         paymentType: req.body.paymentType || '',
         assured: req.body.assured || '',
+        latitude: req.body.latitude || '',
+        longitude: req.body.longitude || ''
       };
 
       // Add file URLs from Cloudinary if they exist
@@ -149,6 +150,8 @@ const createCompany = async (req, res) => {
       // Create and save the company
       const company = new Company(companyData);
       const savedCompany = await company.save();
+
+      console.log("Created Company : ", company)
 
       res.status(201).json(savedCompany);
     } catch (error) {
