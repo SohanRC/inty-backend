@@ -35,10 +35,12 @@ const companySchema = new mongoose.Schema({
   },
   nameDisplay: {
     type: String,
-    trim: true
+    trim: true,
+    required: true,
   },
   description: {
-    type: String
+    type: String,
+    required: true
   },
   ageOfCompany: {
     type: String
@@ -136,9 +138,11 @@ const companySchema = new mongoose.Schema({
   },
   latitude: {
     type: String,
+    required: true,
   },
   longitude: {
     type: String,
+    required: true,
   }
 });
 
