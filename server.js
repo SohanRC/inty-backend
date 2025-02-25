@@ -19,6 +19,7 @@ app.use(
       "*", // Allow all domains in development
       "http://localhost:5173", // Local development
       "https://inty-frontend.vercel.app/*", 
+      "https://inty-frontend-seven.vercel.app/*"
       // Add any other domains you're using
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
